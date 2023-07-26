@@ -1,0 +1,54 @@
+.form-reg{
+  width: 60%;
+  margin: 1rem auto;
+}
+
+.register-box{
+  width: 50% !important;
+}
+
+.inner-box-reg {
+  background-color: rgb(245, 245, 245);
+  /* background: #74ebd5;   */
+  /* background: -webkit-linear-gradient(to right, #ACB6E5, #74ebd5);  */
+  /* background: linear-gradient(to right, #ACB6E5, #74ebd5);  */
+}
+
+.inner-box-login{
+  height: 300px;
+  width: 400px;
+  background-color: rgb(245, 245, 245);
+}
+.login-box{
+  /* background-color: blueviolet; */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-img {
+  border: 0.5px solid rgb(98, 98, 98);
+  border-radius: 2px;
+  margin-left: 20%;
+  height: 150px;
+  width: 150px;
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+.img-preview{
+  height: 148px;
+  width: 148px;
+  border-radius: 20px; 
+  object-fit: cover;
+}
+
+.add-post{
+  height: 60px;
+  width: 60px;
+  border-radius: 30px;
+  background-color: blue;
+  position: absolute;
+  right: 0;
+  /* bottom: 0; */
+}
