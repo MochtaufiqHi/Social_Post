@@ -10,20 +10,20 @@ function ChangePassword() {
   const [state] = useContext(UserContext);
   const [show, setShow] = useState(false);
 
-  const handleCloseModal = () => {
-    setShow(false);
-  };
+  // const handleCloseModal = () => {
+  //   setShow(false);
+  // };
 
-  const handleShowModal = () => {
-    if (newPassword !== confirmNewPassword) {
-      Swal.fire({
-        icon: "error",
-        text: "New password and confirm password must match!",
-      });
-      return;
-    }
-    setShow(true);
-  };
+  // const handleShowModal = () => {
+  //   if (newPassword !== confirmNewPassword) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       text: "New password and confirm password must match!",
+  //     });
+  //     return;
+  //   }
+  //   setShow(true);
+  // };
 
   let { data: user } = useQuery("userCache", async () => {
     const response = await API.get(`/user/${state?.user?.id}`);

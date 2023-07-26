@@ -2,8 +2,6 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import DetailUser from "../components/DetailUser";
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import ModalUpdateUser from "../components/ModalUpdateUser";
 
 function User() {

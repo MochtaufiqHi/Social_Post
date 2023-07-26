@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./index.css";
 import { AiOutlineHome } from "react-icons/ai";
 // import { BiLogOut } from "react-icons/bi";

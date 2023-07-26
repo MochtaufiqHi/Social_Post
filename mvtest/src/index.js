@@ -7,6 +7,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import reportWebVitals from "./reportWebVitals";
 import { UserContextProvider } from "./context/UserContext";
+import "react-notifications/lib/notifications.css";
+import { NotificationContainer } from "react-notifications";
 
 const client = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -14,10 +16,11 @@ root.render(
   <React.StrictMode>
     <UserContextProvider>
       <QueryClientProvider client={client}>
-        <Router>
-          <App />
-        </Router>
+          <Router>
+            <App />
+          </Router>
       </QueryClientProvider>
+        <NotificationContainer />
     </UserContextProvider>
   </React.StrictMode>
 );

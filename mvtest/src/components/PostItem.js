@@ -142,6 +142,7 @@ function PostItem() {
                   variant="top"
                   src={data?.image}
                   style={{ width: "221px", height: "210px" }}
+                  alt={data?.image}
                 />
                 <Card.Body>
                   <div className="d-flex">

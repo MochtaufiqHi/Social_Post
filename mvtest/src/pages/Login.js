@@ -48,7 +48,12 @@ function Login() {
         'success'
       )
     } catch (error) {
-      console.log("Login failed : ", error); 
+      console.log("Login failed : ", error);
+      Swal.fire(
+        'Loggin Failed !!',
+        'Please check username and password',
+        'error'
+      )
     }
   })
 
@@ -74,7 +79,7 @@ function Login() {
 
             <div style={{fontSize:"12px", marginTop:"10px"}}>
               <Link to="/register" style={{fontSize:"12px", textDecoration:"none", color:"black"}}>
-                <p>Don't have an account, register <b>Click Here</b></p>
+                <p style={{opacity:"0.6"}}>Don't have an account, register <b>Click Here</b></p>
               </Link>
             </div>
           </Form>

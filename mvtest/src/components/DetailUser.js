@@ -5,16 +5,18 @@ import { API } from "../config/API/api";
 
 function DetailUser() {
   const [show, setShow] = useState(false);
+  // eslint-disable-next-line
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => {
       setShow(false)
   }
 
-  const [confirmedUpdate, setConfirmedUpdate] = useState(false);
+  // const [confirmedUpdate, setConfirmedUpdate] = useState(false);
 
   const [state] = useContext(UserContext);
   const [edit, setEdit] = useState(false);
   const [formData, setFormData] = useState({});
+  // eslint-disable-next-line
   const [preview, setPreview] = useState(null);
 
   const toggleEdit = () => {

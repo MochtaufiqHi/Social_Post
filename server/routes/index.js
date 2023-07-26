@@ -24,14 +24,14 @@ import { uploadFile } from "../middleware/uploadFiles.js";
 
 const router = express.Router();
 
-router.post("/auth/register", uploadFile('picture', null, 'picture'), registerUser);
+router.post("/auth/register", uploadFile('picture'), registerUser);
 router.post("/auth/login", loginUser);
 router.post("/auth/logout", logoutUser);
 router.get("/user/:id", getUserByID);
 router.put("/user/:id", auth, updateUser);
 router.put("/user/change-password/:id", auth, changePassword);
 
-router.post("/post", auth, createPost);
+router.post("/post", auth, uploadFile('picture'), createPost);
 router.put("/post/:id", auth, updatePost);
 router.delete("/post/:id", auth, deletePost);
 router.put("/post/like/:id", auth, likePost);
@@ -42,6 +42,6 @@ router.get("/post2", auth, getAllPost2);
 router.get("/post/:id", auth, getPostById);
 router.get("/post/user/:id", auth, getPostByUserId);
 
-router.post("/file", uploadFile("image", "attachment", "picture"), uploadImage)
+router.post("/file", uploadFile("image", "attachment", "photo"), uploadImage)
 
 export default router;

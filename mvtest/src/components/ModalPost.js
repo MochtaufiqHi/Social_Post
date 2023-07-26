@@ -13,21 +13,41 @@ export default function ModalPost({ show, handleClose }) {
   const [form, setForm] =  useState({
     caption: '',
     tags: '',
-    // image: '',
+    image: '',
   });
 
+  // const handleChange = (e) => {
+  //   setForm({
+  //     ...form,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+
   const handleChange = (e) => {
+    const { name, type } = e.target;
+    const value = type === "file" ? e.target.files[0] : e.target.value;
+  
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+  
+    if (type === "file") {
+      const url = URL.createObjectURL(value);
+      setPreview(url);
+    }
+  
   };
-
 
   const handleOnSubmit = useMutation(async (e) => {
     try {
       e.preventDefault();
-      const response = await API.post("/post", form);
+
+      const formData = new FormData();
+      formData.set("caption", form.caption);
+      formData.set("tags", form.tags);
+      formData.append("picture", form.picture)
+      const response = await API.post("/post", formData);
       console.log("post success :", response)
 
       Swal.fire(
@@ -62,8 +82,7 @@ export default function ModalPost({ show, handleClose }) {
                   size="sm"
                   className="shadow"
                   name="picture"
-                  // value={image}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                 />
               </Form.Group>
 

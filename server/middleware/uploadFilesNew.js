@@ -1,34 +1,21 @@
-import multer from 'multer';
+import multer from "multer";
 
-export const uploadFile = (imageField, attachmentField, picture) => {
+export const uploadPhoto = (photoField) => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      switch (file.fieldname) {
-        case imageField:
-          cb(null, "uploads/products");
-          break;
-        case attachmentField:
-          cb(null, "uploads/transaction");
-          break;
-        case picture:
-          cb(null, "uploads/photo");
-          break;
-        default:
-          cb(new Error("Invalid fieldname"));
+      if (file.fieldname === photoField) {
+        cb(null, "uploads/photo");
+      } else {
+        cb(new Error("Invalid fieldname"));
       }
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname.replace(/\s/g, ""));
+      cb(null, Date.now() + "-" + file.originalname.replace(/\s/g, ""));
     },
   });
 
-  // Function untuk filter file berdasarkan type
   const fileFilter = function (req, file, cb) {
-    if (
-      file.fieldname === imageField ||
-      file.fieldname === attachmentField ||
-      file.fieldname === picture
-    ) {
+    if (file.fieldname === photoField) {
       if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|git|GIF)$/)) {
         req.fileValidationError = {
           message: "Only image files are allowed!",
@@ -40,7 +27,7 @@ export const uploadFile = (imageField, attachmentField, picture) => {
   };
 
   const sizeInMb = 10;
-  const maxSize = sizeInMb * 1000 * 1000; //10Mb
+  const maxSize = sizeInMb * 1000 * 1000; // 10Mb
 
   const upload = multer({
     storage,
@@ -48,29 +35,16 @@ export const uploadFile = (imageField, attachmentField, picture) => {
     limits: {
       fileSize: maxSize,
     },
-  }).fields([
-    {
-      name: imageField,
-      maxCount: 1,
-    },
-    {
-      name: attachmentField,
-      maxCount: 1,
-    },
-    {
-      name: picture,
-      maxCount: 1,
-    },
-  ]);
+  }).single(photoField); // Use .single() to handle a single file for the "photo" field
 
   return (req, res, next) => {
     upload(req, res, function (err) {
       if (req.fileValidationError) {
         return res.status(400).send(req.fileValidationError);
       }
-      if (!req.files && !err) {
+      if (!req.file && !err) {
         return res.status(400).send({
-          message: "Please select files to upload",
+          message: "Please select a photo to upload",
         });
       }
 
@@ -80,9 +54,9 @@ export const uploadFile = (imageField, attachmentField, picture) => {
             message: "Max file size is 10Mb",
           });
         }
-        console.log("Saya Error Akhir", err);
+        console.log("Upload failed", err);
         return res.status(400).send({
-          message: "Failed Akhir",
+          message: "File upload failed",
           status: err,
         });
       }

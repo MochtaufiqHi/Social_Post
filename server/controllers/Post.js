@@ -1,17 +1,18 @@
 import { Sequelize } from "sequelize";
 import { Post, User, UserLiked } from "../model/Model.js";
 import { uploadFile } from "../middleware/uploadFiles.js";
+// import { uploadPhoto } from "../middleware/uploadFiles.js";
 
 export const createPost = async (req, res) => {
   try {
-    const { image, caption, tags } = req.body;
+    const { caption, tags, image } = req.body;
     const userId = req.idUser;
 
     const post = await Post.create({
-      image,
-      caption,
-      tags,
-      userId,
+      caption: caption,
+      tags: tags,
+      userId: userId,
+      image: req.files.picture[0].filename,
     });
 
     const createdPost = await Post.findOne({
@@ -407,7 +408,7 @@ export const getAllPost2 = async (req, res) => {
 
 export const uploadImage = async (req, res) => {
   try {
-    uploadFile('picture')(req, res, (err) => {
+    uploadFile('image')(req, res, (err) => {
       if (err) {
         return res.status(400).json({ success: false, message: err.message });
       }
@@ -423,3 +424,14 @@ export const uploadImage = async (req, res) => {
   }
 };
 
+// export const uploadFile = async (req, res, next) => {
+//   const uploadMiddleware = uploadPhoto(photoField);
+//   uploadMiddleware(req, res, (err) => {
+//     if(err) {
+//       return res.status(400).send({
+//         message: "File upload failed",
+//         status: err,
+//       });
+//     }
+//   })
+// }

@@ -4,6 +4,7 @@ import "./index.css";
 import { useMutation } from "react-query";
 import { API } from "../config/API/api";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Register() {
   const [preview, setPreview] = useState(null);
@@ -17,7 +18,7 @@ function Register() {
     email: "",
     password: "",
     confirmPass: "",
-    // photo: "",
+    photo: "",
   });
 
   const handleChange = (e) => {
@@ -71,15 +72,25 @@ const fileToBase64 = (file) => {
         formData.set("username", form.username);
         formData.set("email", form.email);
         formData.set("password", form.password);
-        // formData.append("picture", form.picture);
+        formData.append("picture", form.picture);
         // formData.set("photo", fileName);
 
         const response = await API.post("/auth/register", formData);
         console.log("Register success :", response);
+        Swal.fire(
+          'Register Success!',
+          'Please Login First',
+          'success'
+        )
   
         navigate("/login");
       } catch (error) {
         console.error("Error during registration:", error);
+        Swal.fire(
+          'Register Failed!',
+          'Email already registered',
+          'error'
+        )
       }
     }
   );
@@ -102,6 +113,7 @@ const fileToBase64 = (file) => {
                 placeholder="Name"
                 size="sm"
                 className="shadow"
+                required
               />
             </Form.Group>
 
@@ -113,6 +125,7 @@ const fileToBase64 = (file) => {
                 placeholder="Username"
                 size="sm"
                 className="shadow"
+                required
               />
             </Form.Group>
 
@@ -124,6 +137,7 @@ const fileToBase64 = (file) => {
                 placeholder="Email"
                 size="sm"
                 className="shadow"
+                required
               />
             </Form.Group>
 
@@ -155,8 +169,8 @@ const fileToBase64 = (file) => {
                 type="file"
                 size="sm"
                 className="shadow"
-                // name="picture"
-                // onChange={handleChange}
+                name="picture"
+                onChange={handleChange}
               />
             </Form.Group>
 

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, username, email, password } = req.body;
+    const { name, username, email, password, photo } = req.body;
 
     const existingUser = await User.findOne({
       where: { email },
@@ -22,13 +22,13 @@ export const registerUser = async (req, res) => {
       username: username,
       email: email,
       password: hasPassword,
-      // photo: photo,
+      photo: req.files.picture[0].filename,
     });
 
     return res.status(201).json({
       success: true,
       message: "Your account has been succesfully created",
-      data: { name, username, email },
+      data: { name, username, email, photo },
     });
   } catch (error) {
     return res
