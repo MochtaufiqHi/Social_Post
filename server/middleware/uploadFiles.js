@@ -1,4 +1,5 @@
 import multer from 'multer';
+const baseUrl = "http://localhost:5000/uploads/products/"
 
 export const uploadFile = (imageField, attachmentField, picture) => {
   const storage = multer.diskStorage({
@@ -18,7 +19,7 @@ export const uploadFile = (imageField, attachmentField, picture) => {
       }
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname.replace(/\s/g, ""));
+      cb(null,Date.now() + "-" + file.originalname.replace(/\s/g, ""));
     },
   });
 

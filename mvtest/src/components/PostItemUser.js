@@ -4,7 +4,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { UserContext } from "../context/UserContext";
 import { API } from "../config/API/api";
 import { useMutation, useQuery } from "react-query";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 function PostItemUser() {
@@ -14,8 +14,12 @@ function PostItemUser() {
   const [show, setShow] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);;
-  const [user] =useContext(UserContext)
-  const [preview, setPreview] = useState(false)
+  const [user] =useContext(UserContext);
+  const [preview, setPreview] = useState(false);
+  const [updateFormData, setUpdateFormData] = useState({
+    caption: '',
+    tags: '',
+  });
 
   let { data: post } = useQuery("postByIdCache", async () => {
     const response = await API.get("/post");
@@ -23,15 +27,13 @@ function PostItemUser() {
     return response.data.data;
   });
 
-  // console.log(user) 
-  // console.log(posts) 
 
   const filteredPosts =
     posts &&
     posts.filter(
       (data) =>
-        data.caption.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        data.tags.toLowerCase().includes(searchQuery.toLowerCase())
+        data.caption?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
+        data.tags?.toLowerCase().includes(searchQuery?.toLowerCase())
     );
 
   const itemsPerPage = 8;
@@ -82,6 +84,8 @@ function PostItemUser() {
 
     return pageNumbers;
   };
+
+
 
   const likePostMutation = useMutation(async (postId) => {
     try {
@@ -151,9 +155,45 @@ function PostItemUser() {
     }
   }
 
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await API.put(`/post/${selectedPostId}`, updateFormData);
+      setPost((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === selectedPostId ? { ...post, ...updateFormData } : post
+        )
+      );
+      setShowUpdate(false);
+      Swal.fire("Success!", "Post has been updated.", "success");
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
+  };
+
   const handleDeleteClick = (postId) => {
     setSelectedPostId(postId);
     setShow(true);
+  };
+
+  const handleUpdateFormChange = (e) => {
+    const { name, value } = e.target;
+    setUpdateFormData({
+      ...updateFormData,
+      [name]: value,
+    });
+  }
+
+  const handleUpdateClick = async (postId) => {
+    setSelectedPostId(postId);
+    try {
+      const response = await API.get(`/post/${postId}`);
+      const { caption, tags } = response.data; 
+      setUpdateFormData({ caption, tags });
+      setShowUpdate(true);
+    } catch (error) {
+      console.error("Error fetching post data:", error);
+    }
   };
 
   return (
@@ -176,7 +216,7 @@ function PostItemUser() {
                   <Card.Img
                     variant="top"
                     src={data?.image}
-                    style={{ width: "221px", height: "210px" }}
+                    style={{ width: "222px", height: "210px" }}
                     alt={data?.image}
                   />
                   <Card.Body>
@@ -200,15 +240,18 @@ function PostItemUser() {
                       {isCurrentUserPost && (
                       <div className="p-relative bg-warning">
                         <div className="btn-update">
-                          <button className="btn-item"> Update</button>
+                          <button 
+                            className="btn-item"
+                            onClick={() => handleDeleteClick(data.id)}
+                          >Delete</button>
                         </div>
                         <div className="btn-delete">
                           <button
                             className="btn-item"
-                            onClick={() => handleDeleteClick(data.id)}
+                            onClick={() => handleUpdateClick(data.id)}
                           >
                             {" "}
-                           Delete
+                           Update
                           </button>
                         </div>
                       </div>
@@ -280,13 +323,13 @@ function PostItemUser() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show} onHide={handleCloseUpdate} className="text-center">
+      <Modal show={showUpdate} onHide={handleCloseUpdate} className="text-center">
         <Modal.Footer>
           <div className="w-100"></div>
           <div className="d-flex justify-content-center w-100">
-            <Form>
+            <Form onSubmit={handleUpdateSubmit}>
               <h3 className="py-4" style={{ color: "blueviolet" }}>
-                Create Post
+                Update Post
               </h3>
 
               <Form.Group
@@ -298,8 +341,7 @@ function PostItemUser() {
                   size="sm"
                   className="shadow"
                   name="picture"
-                  // value={image}
-                  // onChange={handleChange}
+                  // onChange={handleUpdateFormChange}
                 />
               </Form.Group>
 
@@ -315,8 +357,8 @@ function PostItemUser() {
                   type="text"
                   placeholder="caption"
                   size="sm"
+                  onChange={handleUpdateFormChange}
                   className="shadow"
-                  // onChange={handleChange}
                 />
               </Form.Group>
 
@@ -326,14 +368,14 @@ function PostItemUser() {
                   type="text"
                   placeholder="#tags"
                   size="sm"
-                  // onChange={handleChange}
+                  onChange={handleUpdateFormChange}
                   className="shadow"
                 />
               </Form.Group>
               <Button variant="primary" onClick={handleCloseUpdate} className="m-4">
                 Close
               </Button>
-              <Button variant="primary" onClick={handleCloseUpdate} className="m-4" type="submit">
+              <Button variant="primary" className="m-4" type="submit">
                 Submit
               </Button>
             </Form>

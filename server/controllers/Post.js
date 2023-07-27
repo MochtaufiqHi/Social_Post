@@ -412,9 +412,10 @@ export const uploadImage = async (req, res) => {
       if (err) {
         return res.status(400).json({ success: false, message: err.message });
       }
+      const baseUrl = "http://localhost:5000/uploads/products/"
       const uploadedPicture = req.files.picture[0];
       const pictureBuffer = uploadedPicture.buffer;
-      const pictureName = uploadedPicture.originalname;
+      const pictureName = baseUrl + uploadedPicture.originalname;
 
       return res.status(200).json({ success: true, message: 'Image uploaded successfully', pictureName });
     });
